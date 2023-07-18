@@ -1,5 +1,5 @@
 from django.db import models
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
@@ -24,6 +24,10 @@ class BookTags(models.Model):
         return self.name
 
 class Book(models.Model):
+    language_choices = (
+        ('fa','farsi'),
+        ('en','english'),
+    )
     title = models.CharField(max_length=250)
     image = models.ImageField()
     alt = models.CharField(max_length=100)
@@ -31,9 +35,11 @@ class Book(models.Model):
     discount_percentage = models.IntegerField(default=0,validators=[MaxValueValidator(100),MinValueValidator(0)],verbose_name='درصد تخفیف')
     book_count = models.PositiveBigIntegerField(verbose_name='تعداد محصول',validators=[MinValueValidator(0)])
     author = models.ForeignKey(Author,on_delete=models.PROTECT)
-    category = models.ForeignKey(Category,on_delete=models.PROTECT)
-    info = RichTextField()
+    category = models.ManyToManyField(Category)
+    info = RichTextUploadingField()
     tags = models.ManyToManyField(BookTags)
+    book_language = models.CharField(max_length=2,choices=language_choices,default='fa')
+    published_date = models.DateField(null=True)
     created  =models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True,null=True)
     is_active = models.BooleanField(default=True)
