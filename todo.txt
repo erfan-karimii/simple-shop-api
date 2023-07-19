@@ -1,2 +1,3 @@
-- register user
+- short info in api book-list
+- swagger
 

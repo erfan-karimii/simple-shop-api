@@ -36,6 +36,7 @@ class Book(models.Model):
     book_count = models.PositiveBigIntegerField(verbose_name='تعداد محصول',validators=[MinValueValidator(0)])
     author = models.ForeignKey(Author,on_delete=models.PROTECT)
     category = models.ManyToManyField(Category)
+    description = models.TextField(null=True,verbose_name='توضیح کوتاه')
     info = RichTextUploadingField()
     tags = models.ManyToManyField(BookTags)
     book_language = models.CharField(max_length=2,choices=language_choices,default='fa')
