@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'ckeditor',
     'ckeditor_uploader',
+    'drf_yasg',
+    'django_filters',
+    'rest_framework_simplejwt',
 
     'account',
     'book',
@@ -159,4 +162,17 @@ CKEDITOR_CONFIGS = {
             ['About']
         ]
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=100),
 }

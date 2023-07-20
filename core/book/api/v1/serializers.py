@@ -4,7 +4,7 @@ from book.models import Book , Category , BookTags , Author
 class BookListSerilizers(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Book
-        exclude = ('info',)
+        exclude = ('info','is_active')
         extra_kwargs = {
             'url': {'view_name': 'book:api-v1:book-detail'},
             'author': {'view_name': 'book:api-v1:author-detail'},
@@ -16,14 +16,19 @@ class BookDetailSerilizers(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = '__all__'
+    
 
 
 class CategorySerilizers(serializers.ModelSerializer):
+    related_book_count = serializers.IntegerField(source='get_related_book_count',read_only=True)
+
     class Meta:
         model = Category
         fields = '__all__'
+    
 
 class AuthorSerilizers(serializers.ModelSerializer):
+    author_book_count = serializers.IntegerField(source='get_author_book_count',read_only=True)
     class Meta:
         model = Author
         fields = '__all__'
