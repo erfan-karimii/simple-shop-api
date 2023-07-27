@@ -1,6 +1,5 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from account.models import User
@@ -11,7 +10,6 @@ from .custom_permissions import IsNotAuthenticated
 class UserListView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserListSerilizer
-    permission_classes = [IsAuthenticated]
 
 class UserRegistration(APIView):
     serializer_class = UserRegisterSerilizer
@@ -28,7 +26,6 @@ class UserRegistration(APIView):
 
 class ChangePasswordApiView(APIView):
     model = User
-    permission_classes = [IsAuthenticated]
     serializer_class = ChangePasswordSerialier
 
     def get_object(self, queryset=None):

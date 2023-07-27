@@ -1,3 +1,5 @@
 static/
 *.pyc
 *.sqlite
+core/core/__pycache__/settings.cpython-311.pyc
+core/db.sqlite3

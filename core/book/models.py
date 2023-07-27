@@ -21,7 +21,7 @@ class Book(models.Model):
     alt = models.CharField(max_length=100)
     price = models.IntegerField(verbose_name='قیمت اصلی')
     discount_percentage = models.IntegerField(default=0,validators=[MaxValueValidator(100),MinValueValidator(0)],verbose_name='درصد تخفیف')
-    book_count = models.PositiveBigIntegerField(verbose_name='تعداد محصول',validators=[MinValueValidator(0)])
+    cover_count = models.PositiveBigIntegerField(verbose_name='تعداد محصول',validators=[MinValueValidator(0)])
     author = models.ForeignKey('Author',on_delete=models.PROTECT)
     category = models.ManyToManyField('Category')
     description = models.TextField(null=True,verbose_name='توضیح کوتاه')

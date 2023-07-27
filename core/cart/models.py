@@ -14,13 +14,15 @@ def validate_phone_number(value):
             _('number is not valid'),
         )
 
+# null = True of some field is because when i want to create new order
+# i cant fill this fields 
 class Order(models.Model):
     owner = models.ForeignKey(MyUser,on_delete=models.CASCADE)
-    full_name = models.CharField(max_length=250)
-    address = models.TextField()
-    phone_number = models.CharField(max_length=15,validators=[validate_phone_number])
+    full_name = models.CharField(max_length=250,null=True,blank=True)
+    address = models.TextField(null=True,blank=True)
+    phone_number = models.CharField(max_length=15,validators=[validate_phone_number],null=True,blank=True)
     is_paid = models.BooleanField(default=False)
-    payment_date = models.DateTimeField()
+    payment_date = models.DateTimeField(null=True,blank=True)
 
     def get_total_price(self):
         amount = 0 
@@ -30,7 +32,7 @@ class Order(models.Model):
         return amount
 
     def __str__(self):
-        return str(self.id) + " " + str(self.owner)
+        return str(self.owner) + " ////////// " + str(self.id)
 
 class OrderDetail(models.Model):
     order = models.ForeignKey(Order,on_delete=models.CASCADE)
@@ -41,4 +43,4 @@ class OrderDetail(models.Model):
         return self.orderdetail_count * self.book.price
 
     def __str__(self):
-        return str(self.order) + " " + str(self.book)
+        return str(self.order.id) + " ////////// " + str(self.book.title)

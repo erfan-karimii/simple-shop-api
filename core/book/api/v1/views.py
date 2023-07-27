@@ -1,6 +1,5 @@
 from rest_framework.generics import ListCreateAPIView ,RetrieveAPIView
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import BookListSerilizers , BookDetailSerilizers , AuthorSerilizers , CategorySerilizers , BookTagsSerilizers
@@ -11,8 +10,6 @@ class BookList(ListCreateAPIView):
     queryset = Book.objects.all()
     pagination_class = LargeResultsSetPagination
     serializer_class = BookListSerilizers
-    # authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
     filter_backends = [filters.SearchFilter,filters.OrderingFilter]
     search_fields = ['title','category__name']
     ordering_fields = ['title', 'published_date','price']
