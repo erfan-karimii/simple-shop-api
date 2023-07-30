@@ -36,13 +36,26 @@ class RemoveFromCartSerlizer(serializers.Serializer):
 
         return attrs
 
-# class OrderDetailSerilizer(serializers.ModelSerializer):
-#     class Meta:
-#         model = OrderDetail
-#         fields = '__all__'
+class OrderDetailSerilizer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = OrderDetail
+        fields = '__all__'
+        extra_kwargs = {
+            'url': {'view_name': 'cart:api-v1:cart-detail'},
+            'order': {'view_name': 'cart:api-v1:open-cart'},
+            'tags': {'view_name': 'book:api-v1:book-detail'},
+        }
 
 
-# class OpenCartSerilizer(serializers.Serializer):
-#     class Meta:
-#         model = Order
-#         fields = ('owner','')
+class OpenCartSerilizer(serializers.ModelSerializer):
+    related_orderdetail = serializers.SerializerMethodField()
+
+    def get_related_orderdetail(self,obj):
+        related_detail = obj.orderdetail_set.all()
+        serializer = OrderDetailSerilizer(related_detail,many=True,context={"request":self.context.get('request')})
+        return serializer.data
+     
+    class Meta:
+        model = Order
+        fields = ('owner','is_paid','related_orderdetail')
+

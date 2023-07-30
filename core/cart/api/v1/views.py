@@ -1,7 +1,7 @@
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView , RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serilizers import AddToCartSerlizer , RemoveFromCartSerlizer
+from .serializers import AddToCartSerlizer , RemoveFromCartSerlizer , OpenCartSerilizer ,OrderDetailSerilizer
 from cart.models import Order , OrderDetail
 
 class AddToCart(GenericAPIView):
@@ -34,6 +34,21 @@ class RemoveFromCart(GenericAPIView):
             return Response(serilizer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
+class OrderDetailView(RetrieveAPIView):
+    queryset = OrderDetail.objects.all()
+    serializer_class = OrderDetailSerilizer
 
-# class OpenOrder(GenericAPIView):
-#     serializer_class = ''
+
+class OpenOrder(GenericAPIView):
+    serializer_class = OpenCartSerilizer
+    def get(self,request,*args,**kwargs):
+        if request.user.is_anonymous:
+            return Response({'not allowed':'please login or sign-up '},status=status.HTTP_401_UNAUTHORIZED)
+
+        order , created = Order.objects.get_or_create(owner=request.user)
+        if created or not order.orderdetail_set.all().exists():
+            return Response({'cart is empty':'your cart is empty , please visite other pages to add product'},status.HTTP_200_OK)
+        
+        serilizer = self.get_serializer(order)
+        return Response(serilizer.data,status=status.HTTP_200_OK)
+       
