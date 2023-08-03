@@ -3,3 +3,6 @@ djangorestframework
 drf-yasg
 django-filter
 djangorestframework-simplejwt
+django-cors-headers
+Pillow
+strip

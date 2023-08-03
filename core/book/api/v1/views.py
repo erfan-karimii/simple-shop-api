@@ -18,7 +18,7 @@ class BookDetail(RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookDetailSerilizers
 
-class AuthorDetail(viewsets.ModelViewSet):
+class AuthorViewset(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerilizers
 
@@ -27,6 +27,6 @@ class CategoryViewset(viewsets.ModelViewSet):
     serializer_class = CategorySerilizers
 
 
-class BookTagsDetail(viewsets.ModelViewSet):
+class BookTagsViewset(viewsets.ModelViewSet):
     queryset = BookTags.objects.all()
     serializer_class = BookTagsSerilizers

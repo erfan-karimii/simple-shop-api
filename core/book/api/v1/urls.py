@@ -6,9 +6,9 @@ app_name = "api-v1"
 
 router = routers.DefaultRouter()
 
-router.register(r'author', views.AuthorDetail)
+router.register(r'author', views.AuthorViewset)
 router.register(r'category', views.CategoryViewset)
-router.register(r'booktags', views.BookTagsDetail)
+router.register(r'booktags', views.BookTagsViewset)
 
 
 urlpatterns = [
