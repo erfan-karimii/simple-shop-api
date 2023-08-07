@@ -11,6 +11,11 @@ class BookListSerilizers(serializers.HyperlinkedModelSerializer):
             'category': {'view_name': 'book:api-v1:category-detail'},
             'tags': {'view_name': 'book:api-v1:booktags-detail'},
         }
+        
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['id'] = instance.id
+        return representation
 
 class BookDetailSerilizers(serializers.ModelSerializer):
     class Meta:

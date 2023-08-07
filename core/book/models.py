@@ -5,6 +5,7 @@ from django.db import models
 from django.core.files import File
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+
 from ckeditor_uploader.fields import RichTextUploadingField
 # Create your models here.
 
@@ -21,9 +22,9 @@ class Book(models.Model):
         ('en','english'),
     )
     title = models.CharField(max_length=250)
-    slug = models.SlugField(null=True)
+    slug = models.SlugField(null=True,blank=True)
     image = models.ImageField()
-    thumbnmail =models.ImageField(null=True)
+    thumbnail = models.ImageField(null=True,blank=True)
     alt = models.CharField(max_length=100)
     price = models.IntegerField(verbose_name='قیمت اصلی')
     discount_percentage = models.IntegerField(default=0,validators=[MaxValueValidator(100),MinValueValidator(0)],verbose_name='درصد تخفیف')
@@ -45,22 +46,12 @@ class Book(models.Model):
     def main_discount_call(self):
         return self.price - (self.price * (self.discount_percentage/100))
     
-    def get_image(self):
-        if self.image:
-            return "http://127.0.0.1:8000" + self.image.url
-        else:
-            return ''
-        
-    def get_thumbnail(self):
-        if self.thumbnmail:
-            return "http://127.0.0.1:8000" + self.thumbnmail.url
-        elif self.image:
-            self.thumbnmail = self.make_thumbnail(self.image)
-            self.save()
-            return "http://127.0.0.1:8000" + self.thumbnmail.url
-        else:
-            return ''
-    
+    def save(self,*args, **kwargs):
+        self.thumbnail = self.make_thumbnail(self.image)
+        super().save()
+
+
+
     def make_thumbnail(self,image,size=(300,200)):
         img = Image.open(image)
         img.convert('RGB')

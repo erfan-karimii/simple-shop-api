@@ -13,7 +13,7 @@ router.register(r'booktags', views.BookTagsViewset)
 
 urlpatterns = [
     path('book-list/',views.BookList.as_view(),name='book-list'),
-    path('book-detail/<pk>/',views.BookDetail.as_view(),name='book-detail'),
+    path('book-detail/<int:pk>/',views.BookDetail.as_view(),name='book-detail'),
 ]
 
 urlpatterns += router.urls

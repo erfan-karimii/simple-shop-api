@@ -8,7 +8,7 @@ from book.models import Book , Author , Category , BookTags
 
 class BookList(ListCreateAPIView):
     queryset = Book.objects.all()
-    pagination_class = LargeResultsSetPagination
+    # pagination_class = LargeResultsSetPagination
     serializer_class = BookListSerilizers
     filter_backends = [filters.SearchFilter,filters.OrderingFilter]
     search_fields = ['title','category__name']
