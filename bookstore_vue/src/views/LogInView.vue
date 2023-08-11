@@ -1,8 +1,8 @@
 <template>
-    <div class="page-sign-up">
+    <div class="page-log-in">
         <div class="columns">
             <div class="column is-4 is-offset-4">
-                <h1 class="title">Sign up</h1>
+                <h1 class="title">Log In</h1>
                 <form @submit.prevent="submitForm">
                     <div class="field">
                         <label>Email</label>
@@ -16,22 +16,16 @@
                             <input class="input" type="password" autocomplete="on" v-model="password">
                         </div>
                     </div>
-                    <div class="field">
-                        <label>Repeat Password</label>
-                        <div class="control">
-                            <input class="input" type="password" autocomplete="on" v-model="password2">
-                        </div>
-                    </div>
                     <div class="notification is-danger" v-if="errors.length">
                         <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
                     </div>
                     <div class="field">
                         <div class="control">
-                            <button class="button is-dark">SignUp</button>
+                            <button class="button is-dark">LogIn</button>
                         </div>
                     </div>
                     <hr>
-                    Or <router-link to="/log-in">click here</router-link> to log in!
+                    Or <router-link to="/log-in">click here</router-link> to sign up!
                 </form>
             </div>
         </div>
@@ -40,20 +34,18 @@
 
 <script>
 import axios from "axios";
-import { toast } from "bulma-toast";
 
 export default{
-    name:'SignUp',
+    name:'LogIn',
     data(){
         return{
             email :'',
             password : '',
-            password2 : '',
             errors : []
         }
     },
     mounted(){
-        document.title = 'Sign Up | bookstore'
+        document.title = 'Log In | bookstore'
     },
     methods:{
         submitForm(){
@@ -66,27 +58,22 @@ export default{
                 this.errors.push('password is required.')
             }
 
-            if (this.password !== this.password2) {
-                this.errors.push('the passwords doesn\'t match.')
-            }
-
             if (!this.errors.length) {
                 const formData = {
                     email : this.email,
                     password : this.password,
-                    password1 : this.password2,
                 }
-                axios.post('/account/api/v1/user-registration/',formData)
+                axios.post('/api/token/',formData)
                 .then(response=>{
-                    toast({
-                        message: response.data,
-                        type: 'is-success',
-                        dismissible: true,
-                        pauseOnHover:true,
-                        duration:2000,
-                        position:'bottom-right'
-                    })
-                    this.$route.push('/log-in')
+                    const token = response.data.access
+                    this.$store.commit('setToken', token)
+                    
+                    axios.defaults.headers.common["Authorization"] = "Bearer " + token
+
+                    localStorage.setItem("token", token)
+
+                    const toPath = this.$route.query.to || '/cart'
+                    this.$router.push(toPath)
                 })
                 .catch(error=>{
                     if (error.response) {

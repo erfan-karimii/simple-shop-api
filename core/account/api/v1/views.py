@@ -32,5 +32,6 @@ class ChangePasswordApiView(APIView):
         obj = self.request.user
         return obj
 
+
     
 
