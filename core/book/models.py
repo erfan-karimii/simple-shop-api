@@ -30,7 +30,7 @@ class Book(models.Model):
     discount_percentage = models.IntegerField(default=0,validators=[MaxValueValidator(100),MinValueValidator(0)],verbose_name='درصد تخفیف')
     cover_count = models.PositiveBigIntegerField(verbose_name='تعداد محصول',validators=[MinValueValidator(0)])
     author = models.ForeignKey('Author',on_delete=models.PROTECT)
-    category = models.ManyToManyField('Category')
+    category = models.ForeignKey('Category',on_delete=models.PROTECT,null=True,related_name='books')
     description = models.TextField(null=True,verbose_name='توضیح کوتاه')
     info = RichTextUploadingField()
     tags = models.ManyToManyField('BookTags')
@@ -76,7 +76,7 @@ class Category(models.Model):
     
     
     def get_related_book_count(self):
-        count = self.book_set.count()
+        count = self.books.count()
         return count
 
 class Author(models.Model):
@@ -87,5 +87,5 @@ class Author(models.Model):
         return self.full_name
     
     def get_author_book_count(self):
-        count = self.book_set.count()
+        count = self.books.count()
         return count

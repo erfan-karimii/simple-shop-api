@@ -2,6 +2,7 @@ from rest_framework import serializers
 from book.models import Book , Category , BookTags , Author
 
 class BookListSerilizers(serializers.HyperlinkedModelSerializer):
+    
     class Meta:
         model = Book
         exclude = ('info','is_active')
@@ -26,6 +27,7 @@ class BookDetailSerilizers(serializers.ModelSerializer):
 
 class CategorySerilizers(serializers.ModelSerializer):
     related_book_count = serializers.IntegerField(source='get_related_book_count',read_only=True)
+    books = BookListSerilizers(many=True)
 
     class Meta:
         model = Category

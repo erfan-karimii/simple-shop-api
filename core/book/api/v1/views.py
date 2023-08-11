@@ -11,7 +11,7 @@ class BookList(ListCreateAPIView):
     # pagination_class = LargeResultsSetPagination
     serializer_class = BookListSerilizers
     filter_backends = [filters.SearchFilter,filters.OrderingFilter]
-    search_fields = ['title','category__name']
+    search_fields = ['title','category__name','description']
     ordering_fields = ['title', 'published_date','price']
 
 class BookDetail(RetrieveAPIView):

@@ -12,9 +12,32 @@
         </a>
       </div>
       <div class="navbar-menu" id="navbar-menu" v-bind:class="{'is-active':showMobileMenu}">
+        <div class="navbar-start">
+          <div class="navbar-item">
+            <form action="/search" method="get">
+              <div class="field has-addons">
+                <div class="control">
+                  <input type="text" class="input" placeholder="what are you loking for?" name="query">
+                </div>
+                <div class="control">
+                  <button  class="button is-success">
+                    <span class="icon">
+                      <i class="fas fa-search"></i>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
         <div class="navbar-end">
-          <router-link to="/summer" class="navbar-item">Summer</router-link>
-          <router-link to="/winter" class="navbar-item">Winter</router-link>
+          <router-link 
+          v-for="category in categories"
+          :key="category.id"  
+          :to = "`/category/${category.id}`" 
+          class="navbar-item">
+          {{ category.name }}
+        </router-link>
           <div class="navbar-item">
             <div class="buttons">
               <router-link to="/log-in" class="button is-light">Log in</router-link>
@@ -42,13 +65,16 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data(){
     return{
       showMobileMenu:false,
       cart:{
         items:[],
-      }
+      },
+      categories:[],
     }
   },
   beforeCreate(){
@@ -56,6 +82,18 @@ export default {
   },
   mounted(){
     this.cart = this.$store.state.cart
+    this.getNavBar()
+  },
+  methods:{
+    getNavBar(){  
+        axios.get(`/book/api/v1/category/`)
+        .then(response=>{
+            this.categories = response.data
+        })
+        .catch(error=>{
+            console.log(error)
+        })
+    }
   },
   computed:{
     totalCartLength(){
