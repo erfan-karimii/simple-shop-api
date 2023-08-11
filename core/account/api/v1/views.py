@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView , GenericAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,7 +11,7 @@ class UserListView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserListSerilizer
 
-class UserRegistration(APIView):
+class UserRegistration(GenericAPIView):
     serializer_class = UserRegisterSerilizer
     permission_classes = [IsNotAuthenticated]
 
