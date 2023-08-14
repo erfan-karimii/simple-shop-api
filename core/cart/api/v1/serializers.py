@@ -57,5 +57,15 @@ class OpenCartSerilizer(serializers.ModelSerializer):
      
     class Meta:
         model = Order
-        fields = ('owner','is_paid','related_orderdetail')
+        # fields = ('owner','is_paid','related_orderdetail','first_name',
+        #         'last_name','address','phone_number','paid_amout','strip_token')
+        exclude = ('payment_date',)
+    
+    def create(self, validated_data):
+        items_data = validated_data.pop('related_detail')
+        order = Order.objects.create(**validated_data)
 
+        for item in items_data:
+            OrderDetail.objects.create(order=order,**item)
+             
+        return order

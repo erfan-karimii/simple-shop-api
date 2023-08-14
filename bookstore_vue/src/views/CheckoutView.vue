@@ -34,6 +34,52 @@
                     </tfoot>
                 </table>
             </div>
+            <div class="column is-12 box">
+                <h2 class="subtitle">Shipping details</h2>
+                <p class="has-text-gray mb-4">* All fields are required</p>
+                <div class="columns is-multiline">
+                    <div class="column is-6">
+                        <div class="field">
+                            <label>First Name</label>
+                            <div class="control">
+                                <input type="text" class="input" v-model="first_name">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Last Name</label>
+                            <div class="control">
+                                <input type="text" class="input" v-model="last_name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-6">
+                        <div class="field">
+                            <label>Phone</label>
+                            <div class="control">
+                                <input type="text" class="input" v-model="phone">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Address</label>
+                            <div class="control">
+                                <input type="text" class="input" v-model="address">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification is-danger mt-4" v-if="errors.length">
+                    <p v-for="error in errors" v-bind:key="error" >{{ error }}</p>
+                </div>
+                
+                <hr>
+
+                <div id="cart-element" class="mb-5"></div>
+                <template v-if="cartTotalLength">
+                    <hr>
+        
+                    <button class="button is-dark" @click="submitForm">Pay With Strip</button>
+                </template>
+            </div>
         </div>
     </div>
 </template>
@@ -50,11 +96,8 @@ export default{
             card:{},
             first_name:'',
             last_name:'',
-            email:'',
             phone:'',
             address:'',
-            zipcode:'',
-            place:'',
             errors:[],
         }
     },
@@ -67,6 +110,26 @@ export default{
         getItemTotal(item){
             return item.quantity * item.product.price
         },
+        submitForm(){
+            if (this.first_name === '') {
+                this.errors.push('first_name is required')
+            }
+            if (this.last_name === '') {
+                this.errors.push('last_name is required')
+            }
+            if (this.email === '') {
+                this.errors.push('email is required')
+            }
+            if (this.phone === '') {
+                this.errors.push('phone is required')
+            }
+            if (this.address === '') {
+                this.errors.push('address is required')
+            }
+            if (this.place === '') {
+                this.errors.push('place is required')
+            }
+        }
     },
     computed:{
         cartTotalLength(){

@@ -18,16 +18,19 @@ def validate_phone_number(value):
 # i cant fill this fields 
 class Order(models.Model):
     owner = models.ForeignKey(MyUser,on_delete=models.CASCADE)
-    full_name = models.CharField(max_length=250,null=True,blank=True)
+    first_name = models.CharField(max_length=250,null=True,blank=True)
+    last_name = models.CharField(max_length=250,null=True,blank=True)
     address = models.TextField(null=True,blank=True)
     phone_number = models.CharField(max_length=15,validators=[validate_phone_number],null=True,blank=True)
+    paid_amout = models.DecimalField(max_digits=8,decimal_places=2,blank=True,null=True)
     is_paid = models.BooleanField(default=False)
+    strip_token = models.CharField(max_length=100,null=True,blank=True)
     payment_date = models.DateTimeField(null=True,blank=True)
 
     def get_total_price(self):
         amount = 0 
         for detail in self.orderdetail_set.all():
-            amount += detail.book.price * detail.orderdetail_count
+            amount += detail.book.price * detail.quantity
 
         return amount
 
@@ -37,10 +40,11 @@ class Order(models.Model):
 class OrderDetail(models.Model):
     order = models.ForeignKey(Order,on_delete=models.CASCADE)
     book = models.ForeignKey(Book,on_delete=models.CASCADE)
-    orderdetail_count = models.IntegerField()
+    price = models.DecimalField(max_digits=8,decimal_places=2,blank=True,null=True)
+    quantity = models.IntegerField()
 
     def get_detail_sum(self):
-        return self.orderdetail_count * self.book.price
+        return self.quantity * self.book.price
 
     def __str__(self):
         return str(self.order.id) + " ////////// " + str(self.book.title)
