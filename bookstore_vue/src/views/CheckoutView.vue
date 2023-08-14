@@ -73,10 +73,10 @@
                 
                 <hr>
 
-                <div id="cart-element" class="mb-5"></div>
+                <div id="card-element" class="mb-5"></div>
                 <template v-if="cartTotalLength">
                     <hr>
-        
+
                     <button class="button is-dark" @click="submitForm">Pay With Strip</button>
                 </template>
             </div>
@@ -85,6 +85,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default{
     name : "Checkout",
     data() {
@@ -104,6 +106,14 @@ export default{
     mounted(){
         document.document = "Checkout | Bookstore"
         this.cart = this.$store.state.cart
+
+        if (this.cartTotalLength > 0) {
+            this.stripe = Stripe('pk_test_51NeE3LKPpPCkTws449PhgaGCLVcYxQ5u1PdeBPdk4ztvBKo80eRlLff0dan0oYKFob1SnPB12AyL3gnHqRzr0y9X00HfrEa0tQ')
+            const elements = this.stripe.elements();
+            this.card = elements.create('card', { hidePostalCode: true })
+
+            this.card.mount('#card-element')
+        }
 
     },
     methods:{
@@ -129,6 +139,56 @@ export default{
             if (this.place === '') {
                 this.errors.push('place is required')
             }
+            if (!this.errors.length) {
+                this.$store.commit('setIsLoading',true)
+
+                this.stripe.createToken(this.card).then(result =>{
+                    if (result.error) {
+                        this.$store.commit('setIsLoading',false)
+
+                        this.errors.push('Somthing went wrong with stripe. Please try again later')
+
+                        console.log(result.error.message);
+                    }else{
+                        this.stripeTokenHandler(result.token)
+                    }
+                })
+            }
+        },
+        async stripeTokenHandler(token){
+            const items = []
+            for (let i = 0; i < this.cart.items.length; i++) {
+                const item = this.cart.items[i];
+                const obj = {
+                    book : item.product.id,
+                    quantity : item.quantity,
+                    price : item.product.price * item.quantity,
+                }
+                items.push(obj)
+                
+            }
+
+            const data = {
+                'first_name' : this.first_name,
+                'last_name' : this.last_name,
+                'phone_number' : this.phone,
+                'address' : this.address,
+                'orderitem_set' : items,
+                'stripe_token' : token.id
+
+            }
+
+            await axios.post('/cart/api/v1/checkout/',data)
+                .then(response =>{
+                    this.$store.commit('clearCart')
+                    this.$router.push('/success')
+                })
+                .catch(error=>{
+                    this.errors.push('Somthing went wrong. Please try again later')
+                    console.log(error);
+                })
+                this.$store.commit('setIsLoading',false)
+
         }
     },
     computed:{

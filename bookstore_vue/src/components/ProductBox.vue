@@ -6,7 +6,7 @@
       </figure>
       <h3 class="is-size-4">{{ product.title }}</h3>
       <p class="is-size-6 has-text-gray">${{ product.price }}</p>
-      <router-link v-bind:to="'product/'+product.id" class="button is-dark mt-4">View Detailes</router-link>
+      <router-link v-bind:to="'/product/'+product.id" class="button is-dark mt-4">View Detailes</router-link>
     </div>
 </div>
 </template>
