@@ -15,5 +15,6 @@ export default{
     mounted(){
         document.title = 'success | bookstore'
     }
+
 }
 </script>

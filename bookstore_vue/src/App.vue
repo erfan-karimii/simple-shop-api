@@ -17,7 +17,7 @@
             <form action="/search" method="get">
               <div class="field has-addons">
                 <div class="control">
-                  <input type="text" class="input" placeholder="what are you loking for?" name="query">
+                  <input type="text" class="input" placeholder="what are you looking for?" name="query">
                 </div>
                 <div class="control">
                   <button  class="button is-success">
@@ -46,10 +46,7 @@
               <template v-else>
                 <router-link to="/log-in" class="button is-light">Log in</router-link>
               </template>
-              <router-link to="/cart" class="button is-success">
-                <span class="icon"><i class="fas fa-shopping-cart"></i></span>
-                <span>Cart ({{ totalCartLength }})</span>
-              </router-link>
+              <CartButton/>
             </div>
           </div>
         </div>
@@ -71,6 +68,7 @@
 
 <script>
 import axios from "axios";
+import CartButton from "@/components/CartButton.vue"
 
 export default {
   data(){
@@ -92,6 +90,9 @@ export default {
       axios.defaults.headers.common['Authorization'] = ""
     }
   },
+  components:{
+    CartButton
+  },
   mounted(){
     this.cart = this.$store.state.cart
     this.getNavBar()
@@ -105,18 +106,9 @@ export default {
         .catch(error=>{
             console.log(error)
         })
-    }
-  },
-  computed:{
-    totalCartLength(){
-      let totalLength = 0
-      for (let i = 0; i < this.cart.items.length; i++) {
-        totalLength += this.cart.items[i].quantity;        
-      }
-      return totalLength
     },
-    
-  }
+  },
+
 }
 </script>
 

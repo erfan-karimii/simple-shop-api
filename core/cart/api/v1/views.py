@@ -48,3 +48,4 @@ class OrdersList(GenericAPIView):
         orders = Order.objects.filter(owner=request.user)
         serializer = MyOrderSerializer(orders, many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
+

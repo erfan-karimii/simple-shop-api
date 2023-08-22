@@ -181,6 +181,7 @@ export default{
             await axios.post('/cart/api/v1/checkout/',data)
                 .then(response =>{
                     this.$store.commit('clearCart')
+                    this.$emit('computed-trigger');
                     this.$router.push('/success')
                 })
                 .catch(error=>{

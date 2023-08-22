@@ -34,7 +34,7 @@ class CartSerilizer(serializers.ModelSerializer):
         exclude = ('payment_date','owner')
     
     def create(self, validated_data):
-        items_data = validated_data.pop('items')
+        items_data = validated_data.pop('orderitem_set')
         order = Order.objects.create(**validated_data)
 
         for item in items_data:
