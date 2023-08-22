@@ -29,15 +29,17 @@ export default{
                 return totalLength
             },
             set(value){
-                this.cart.items = []
+                return 0
             }
         let totaotalLength
         },
     },
     methods:{
-        recomputedTotalCartLength(){
-            
+        zeroCartLength(){
+            this.cart.items = []
         }
+            
     }
+    
 }
 </script>
